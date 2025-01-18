@@ -1,42 +1,78 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../App.css';
 
-const FormPage = () => {
-  const [formData, setFormData] = useState({
-    field1: '',
-    field2: '',
-    field3: '',
-    field4: '',
-  });
+function FormPage() {
+  const regions = [
+    "Tunis", "Ben Arous", "Ariana", "Bizerte", "Nabeul", "Manouba", "Zaghouan",
+    "Beja", "Monastir", "Enfidha (Sousse)", "Siliana", "Kef", "Kairouan", "Jendouba"
+  ];
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const [tableData, setTableData] = useState(
+    regions.map(region => ({ region, couvPrev: 0, couvReal: 0 }))
+  );
+
+  const handleChange = (index, field, value) => {
+    const updatedData = [...tableData];
+    updatedData[index][field] = parseInt(value) || 0;
+    setTableData(updatedData);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     try {
-      await axios.post('http://localhost:5000/api/entries', formData);
-      alert('Data saved successfully!');
-      setFormData({ field1: '', field2: '', field3: '', field4: '' });
+      const response = await axios.post('http://localhost:5000/api/coverage/save', { data: tableData });
+      alert(response.data.message);
     } catch (error) {
       console.error(error);
-      alert('Error saving data!');
+      alert('Error saving data');
     }
   };
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <h1>Submit Form</h1>
-      <input name="field1" value={formData.field1} onChange={handleChange} placeholder="Field 1" required />
-      <input name="field2" value={formData.field2} onChange={handleChange} placeholder="Field 2" required />
-      <input name="field3" value={formData.field3} onChange={handleChange} placeholder="Field 3" required />
-      <input name="field4" value={formData.field4} onChange={handleChange} placeholder="Field 4" required />
-      <button type="submit">Save</button>
-    </form>
-  );
-};
+  const totalCouvPrev = tableData.reduce((sum, row) => sum + row.couvPrev, 0);
+  const totalCouvReal = tableData.reduce((sum, row) => sum + row.couvReal, 0);
 
+  return (
+    <div className="table-container">
+      <h2>Réalisation Couverture Zone</h2>
+      <table className="table-input">
+        <thead>
+          <tr>
+            <th>Zone</th>
+            <th>Couv Prévu</th>
+            <th>% Couv Prévu</th>
+            <th>Couv Réalisée</th>
+            <th>% Couv Réalisée</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tableData.map((row, index) => (
+            <tr key={index}>
+              <td>{row.region}</td>
+              <td>
+                <input
+                  type="number"
+                  value={row.couvPrev}
+                  onChange={(e) => handleChange(index, 'couvPrev', e.target.value)}
+                />
+              </td>
+              <td>
+                {totalCouvPrev > 0 ? ((row.couvPrev / totalCouvPrev) * 100).toFixed(2) : 0}%
+              </td>
+              <td>
+                <input
+                  type="number"
+                  value={row.couvReal}
+                  onChange={(e) => handleChange(index, 'couvReal', e.target.value)}
+                />
+              </td>
+              <td>
+                {totalCouvReal > 0 ? ((row.couvReal / totalCouvReal) * 100).toFixed(2) : 0}%
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <button onClick={handleSubmit} className="login-button">Save Data</button>
+    </div>
+  );
+}
 export default FormPage;
