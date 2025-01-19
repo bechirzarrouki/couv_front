@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import '../styles/form-page.css';
 
 function FormPage() {
   const regions = [
@@ -20,10 +21,10 @@ function FormPage() {
   const handleSubmit = async () => {
     try {
       const response = await axios.post('http://localhost:5000/api/coverage/save', { data: tableData });
-      alert(response.data.message);
+      alert(`Session saved successfully! ID: ${response.data.sessionId}`);
     } catch (error) {
       console.error(error);
-      alert('Error saving data');
+      alert('Error saving data. Please try again.');
     }
   };
 
@@ -52,27 +53,30 @@ function FormPage() {
                   type="number"
                   value={row.couvPrev}
                   onChange={(e) => handleChange(index, 'couvPrev', e.target.value)}
+                  placeholder="Enter Couv Prévu"
                 />
               </td>
               <td>
-                {totalCouvPrev > 0 ? ((row.couvPrev / totalCouvPrev) * 100).toFixed(2) : 0}%
+                {totalCouvPrev > 0 ? ((row.couvPrev / totalCouvPrev) * 100).toFixed(2) : '0.00'}%
               </td>
               <td>
                 <input
                   type="number"
                   value={row.couvReal}
                   onChange={(e) => handleChange(index, 'couvReal', e.target.value)}
+                  placeholder="Enter Couv Réalisée"
                 />
               </td>
               <td>
-                {totalCouvReal > 0 ? ((row.couvReal / totalCouvReal) * 100).toFixed(2) : 0}%
+                {totalCouvReal > 0 ? ((row.couvReal / totalCouvReal) * 100).toFixed(2) : '0.00'}%
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <button onClick={handleSubmit} className="login-button">Save Data</button>
+      <button onClick={handleSubmit} className="save-button">Save Data</button>
     </div>
   );
 }
+
 export default FormPage;

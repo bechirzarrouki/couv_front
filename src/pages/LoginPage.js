@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../styles/login.css';
 
 function LoginPage() {
   const [formData, setFormData] = useState({ username: '', password: '' });

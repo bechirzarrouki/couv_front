@@ -1,0 +1,55 @@
+/* Form Page Styles */
+.table-container {
+    width: 80%;
+    margin: 30px auto;
+    text-align: center;
+  }
+  
+  .table-container h2 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .table-input {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table-input th,
+  .table-input td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .table-input th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+  
+  .table-input input {
+    width: 80%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .table-input tfoot td {
+    font-weight: bold;
+    background-color: #f9f9f9;
+  }
+  
+  .save-button {
+    margin-top: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .save-button:hover {
+    background-color: #0056b3;
+  }
+  

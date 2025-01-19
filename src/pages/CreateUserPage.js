@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../styles/create-user.css';
 
 function CreateUserPage() {
   const [formData, setFormData] = useState({
