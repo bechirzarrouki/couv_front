@@ -1,79 +1,77 @@
 /* Navbar Container */
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: #333;
-    color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-  
-  /* Logo */
-  .logo {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #fff;
-    text-decoration: none;
-    letter-spacing: 1px;
-    transition: color 0.3s ease;
-  }
-  
-  .logo:hover {
-    color: #ffd700; /* Gold hover effect */
-  }
-  
-  /* Navbar Links */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #333;
+  color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative; /* Changed from sticky to relative */
+  z-index: 1000;
+}
+
+/* Logo */
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: 1px;
+  transition: color 0.3s ease;
+}
+
+.logo:hover {
+  color: #ffd700; /* Gold hover effect */
+}
+
+/* Navbar Links */
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #ffd700; /* Gold hover effect */
+  transform: scale(1.1);
+}
+
+/* Navbar Mobile Toggle */
+.navbar-toggle {
+  display: none;
+  font-size: 2rem;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Navbar Responsive Design */
+@media screen and (max-width: 768px) {
   .nav-links {
-    display: flex;
-    gap: 2rem;
-  }
-  
-  .nav-links a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 1.1rem;
-    transition: color 0.3s ease, transform 0.3s ease;
-  }
-  
-  .nav-links a:hover {
-    color: #ffd700; /* Gold hover effect */
-    transform: scale(1.1);
-  }
-  
-  /* Navbar Mobile Toggle */
-  .navbar-toggle {
     display: none;
-    font-size: 2rem;
-    color: #fff;
-    cursor: pointer;
+    flex-direction: column;
+    gap: 1.5rem;
+    background-color: #333;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 100%;
+    padding: 1rem;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
-  
-  /* Navbar Responsive Design */
-  @media screen and (max-width: 768px) {
-    .nav-links {
-      display: none;
-      flex-direction: column;
-      gap: 1.5rem;
-      background-color: #333;
-      position: absolute;
-      top: 60px;
-      right: 0;
-      width: 100%;
-      padding: 1rem;
-      border-radius: 0 0 8px 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-  
-    .nav-links.active {
-      display: flex;
-    }
-  
-    .navbar-toggle {
-      display: block;
-    }
+
+  .nav-links.active {
+    display: flex;
   }
-  
+
+  .navbar-toggle {
+    display: block;
+  }
+}
