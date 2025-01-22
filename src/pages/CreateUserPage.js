@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../styles/create-user.css';
-
+import Navbar from '../components/Navbar';
 function CreateUserPage() {
   const [formData, setFormData] = useState({
     username: '',
@@ -42,6 +42,8 @@ function CreateUserPage() {
   };
 
   return (
+  <div>
+    <Navbar/>
     <div className="create-user-container">
       <div className="create-user-card">
         <h2>Create User</h2>
@@ -72,14 +74,15 @@ function CreateUserPage() {
               Select Role
             </option>
             <option value="admin">Admin</option>
-            <option value="Zone1">Zone1</option>
-            <option value="Zone2">Zone2</option>
-            <option value="Zone3">Zone3</option>
+            <option value="zone1">zone1</option>
+            <option value="zone2">zone2</option>
+            <option value="zone3">zone3</option>
           </select>
           <button type="submit" className="create-user-button">Create User</button>
         </form>
         {message && <p className="create-user-message">{message}</p>}
       </div>
+    </div>
     </div>
   );
 }

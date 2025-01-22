@@ -1,16 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/login.css';
 
 function LoginPage() {
   const [formData, setFormData] = useState({ username: '', password: '' });
-
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
+  // Update form data on input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  // Handle form submission and login
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage(''); // Clear previous error messages
     try {
       const response = await fetch('http://localhost:5000/api/users/login', {
         method: 'POST',
@@ -23,21 +28,24 @@ function LoginPage() {
       const data = await response.json();
       if (response.ok) {
         alert('Login successful!');
-        console.log(data.user);
-        // Redirect to entries or another page
+        localStorage.setItem('userName', data.user.username);
+        localStorage.setItem('userRole', data.user.role); // Store session token 
+        navigate('/display');
       } else {
-        alert(data.message);
+        setErrorMessage(data.message || 'Invalid login credentials.');
       }
     } catch (error) {
       console.error('Error during login:', error);
-      alert('An error occurred. Please try again.');
+      setErrorMessage('An error occurred. Please try again.');
     }
   };
+
 
   return (
     <div className="login-container">
       <div className="login-card">
         <h2>Login</h2>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
         <form onSubmit={handleSubmit} className="login-form">
           <input
             type="text"

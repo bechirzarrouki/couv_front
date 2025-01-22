@@ -1,34 +1,75 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import for navigation
 import '../App.css';
-
+import Navbar from '../components/Navbar';
+import {getUserRole } from '../utils/auth';
 const DisplayPage = () => {
-  const [entries, setEntries] = useState([]);
-
+  const [sessions, setSessions] = useState([]);
+  const navigate = useNavigate(); // Initialize navigation
+  const Role=getUserRole();
+  // Fetch all sessions
   useEffect(() => {
-    const fetchEntries = async () => {
+    const fetchSessions = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/entries');
-        setEntries(response.data);
+        if(Role==='admin'){
+          const response = await axios.get(`http://localhost:5000/api/users/all-zones`);
+          setSessions(response.data);
+        }else{
+        const response = await axios.get(`http://localhost:5000/api/${Role}/sessions`);
+        setSessions(response.data);
+        }
       } catch (error) {
         console.error(error);
       }
     };
-    fetchEntries();
-  }, []);
+    fetchSessions();
+  }, );
+
+  // Handle session delete
+  const handleDeleteSession = async (sessionId,role) => {
+    try {
+      if(Role==='admin'){
+        await axios.delete(`http://localhost:5000/api/${role}/sessions/${sessionId}`);
+        alert('Session deleted successfully!');
+        setSessions(sessions.filter(session => session._id !== sessionId));
+      }else{
+      await axios.delete(`http://localhost:5000/api/${Role}/sessions/${sessionId}`);
+      alert('Session deleted successfully!');
+      setSessions(sessions.filter(session => session._id !== sessionId));
+    }
+    } catch (error) {
+      console.error('Error deleting session:', error);
+    }
+  };
+
+  // Navigate to the FormPage with session ID for editing
+  const handleEditSession = (sessionId,role) => {
+    if(Role==='admin'){
+    navigate(`/edit-session/${sessionId}/${role}`);
+    }else{
+      navigate(`/edit-session/${sessionId}/${Role}`);
+    }
+  };
 
   return (
-    <div className="entries">
-      <h1>Entries</h1>
-      {entries.map((entry) => (
-        <div className="entry" key={entry._id}>
-          <p>Field 1: {entry.field1}</p>
-          <p>Field 2: {entry.field2}</p>
-          <p>Field 3: {entry.field3}</p>
-          <p>Field 4: {entry.field4}</p>
-          <p>Created At: {new Date(entry.createdAt).toLocaleString()}</p>
+    <div>
+      <Navbar />
+      <div className="display-page">
+        <h1 className="page-title">Formulaires</h1>
+        <div className="sessions-container">
+          {sessions.map(session => (
+            <div className="session-card" key={session._id}>
+              <h2 className="session-id">Session ID: {session._id}</h2>
+              <p className="session-date">Created At: {new Date(session.createdAt).toLocaleString()}</p>
+              <div className="session-actions">
+                <button className="delete-button" onClick={() => handleDeleteSession(session._id,session.zone)}>Delete</button>
+                <button className="update-button" onClick={() => handleEditSession(session._id,session.zone)}>Update</button>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
   );
 };

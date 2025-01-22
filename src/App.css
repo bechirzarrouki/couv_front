@@ -1,0 +1,87 @@
+/* General styles for the display page */
+.display-page {
+    padding: 20px;
+    background-color: #f4f4f9;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+  }
+  
+  .page-title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Sessions container */
+  .sessions-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 10px;
+  }
+  
+  /* Individual session card */
+  .session-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .session-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Session ID and Date */
+  .session-id {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 10px;
+  }
+  
+  .session-date {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 20px;
+  }
+  
+  /* Buttons */
+  .session-actions {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .delete-button, .update-button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+  }
+  
+  .delete-button {
+    background-color: #e63946;
+    color: #fff;
+  }
+  
+  .delete-button:hover {
+    background-color: #d62839;
+  }
+  
+  .update-button {
+    background-color: #2a9d8f;
+    color: #fff;
+  }
+  
+  .update-button:hover {
+    background-color: #21867a;
+  }
+  
+  .delete-button:active, .update-button:active {
+    transform: scale(0.95);
+  }
+  

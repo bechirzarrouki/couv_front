@@ -43,7 +43,7 @@ const Dashboard = () => {
   useEffect(() => {
     // Fetch the latest session data
     axios
-      .get('http://localhost:5000/api/zone1/sessions/latest')
+      .get('http://localhost:5000/api/zone2/sessions/latest')
       .then((response) => {
         setLatestSession(response.data);
         if (response.data && response.data.entries.length > 0) {
@@ -59,7 +59,7 @@ const Dashboard = () => {
     // Fetch data for the bar chart based on the selected zone and weeks
     if (zone && weeks) {
       axios
-        .get('http://localhost:5000/api/zone1/entries', {
+        .get('http://localhost:5000/api/zone2/entries', {
           params: { zone, weeks },
         })
         .then((response) => {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import '../styles/form-page.css';
-
+import Navbar from '../components/Navbar';
 function FormPage() {
   const regions = [
     "Tunis", "Ben Arous", "Ariana", "Bizerte", "Nabeul", "Manouba", "Zaghouan",
@@ -20,7 +20,7 @@ function FormPage() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/coverage/save', { data: tableData });
+      const response = await axios.post('http://localhost:5000/api/zone1/save', { data: tableData });
       alert(`Session saved successfully! ID: ${response.data.sessionId}`);
     } catch (error) {
       console.error(error);
@@ -32,6 +32,8 @@ function FormPage() {
   const totalCouvReal = tableData.reduce((sum, row) => sum + row.couvReal, 0);
 
   return (
+    <div>
+      <Navbar/>
     <div className="table-container">
       <h2>Réalisation Couverture Zone</h2>
       <table className="table-input">
@@ -75,6 +77,7 @@ function FormPage() {
         </tbody>
       </table>
       <button onClick={handleSubmit} className="save-button">Save Data</button>
+    </div>
     </div>
   );
 }

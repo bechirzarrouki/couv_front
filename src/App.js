@@ -1,30 +1,59 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
-import FormPage from './pages/FormPage';
-import DisplayPage from './pages/DisplayPage';
-import CreateUserPage from './pages/CreateUserPage';
 import Dashboard from './pages/Dashboard';
-import Navbar from './components/Navbar';
-import './styles/global.css';
-
+import Zone2Dashboard from './pages/Zone2Dashboard';
+import Zone3Dashboard from './pages/Zone3Dashboard';
+import FormPage from './pages/FormPage';
+import FormPage2 from './pages/Zone2Form';
+import FormPage3 from './pages/Zone3Form';
+import CreateUserPage from './pages/CreateUserPage';
+import DisplayPage from './pages/DisplayPage';
+import UpdatePage from './components/Update';
+ // Helper for checking authentication
 
 function App() {
   return (
     <Router>
-      <div className="app-container">
-        <Navbar/>
+      <Routes>
+        {/* Public Route */}
+        <Route path="/" element={<LoginPage />} />
 
-        <main>
-          <Routes>
-            <Route path="/" element={<LoginPage />} />
-            <Route path="/form" element={<FormPage />} />
-            <Route path="/entries" element={<DisplayPage />} />
-            <Route path="/create-user" element={<CreateUserPage />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-          </Routes>
-        </main>
-      </div>
+        {/* Protected Routes */}
+        <Route
+          path="/zone1dashboard"
+          element={<Dashboard />}
+        />
+                <Route
+          path="/zone2dashboard"
+          element={<Zone2Dashboard />}
+        />
+                        <Route
+          path="/zone3dashboard"
+          element={<Zone3Dashboard />}
+        />
+        <Route
+          path="/zone1"
+          element={ <FormPage /> }
+        />
+        <Route
+          path="/zone2"
+          element={ <FormPage2 /> }
+        />
+        <Route
+          path="/zone3"
+          element={ <FormPage3 /> }
+        />
+        <Route
+          path="/create-user"
+          element={ <CreateUserPage /> }
+        />
+        <Route
+          path="/display"
+          element={ <DisplayPage />}
+        />
+        <Route path="/edit-session/:sessionId/:Role" element={<UpdatePage />} />
+      </Routes>
     </Router>
   );
 }
