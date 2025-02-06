@@ -6,75 +6,157 @@ import Navbar from '../components/Navbar';
 function FormPage() {
   const regions = ["Sfax", "Mednine", "Kebili", "Tozeur", "Sidi Bouzid", "Gafsa", "Mahdia"];
 
-  const [tableData, setTableData] = useState(
-    regions.map(region => ({ region, couvPrev: 0, couvReal: 0 }))
-  );
+  const days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
 
-  const handleChange = (index, field, value) => {
-    const updatedData = [...tableData];
-    updatedData[index][field] = parseInt(value) || 0;
-    setTableData(updatedData);
+  const initializeData = () =>
+    days.map(() => ({ zone1: "", zone2: "" }));
+
+  const [prevuData, setPrevuData] = useState(initializeData());
+  const [realiseData, setRealiseData] = useState(initializeData());
+
+  const handleChange = (table, dayIndex, field, value) => {
+    const updatedData = table === "prevu" ? [...prevuData] : [...realiseData];
+    updatedData[dayIndex][field] = value;
+
+    if (table === "prevu") {
+      setPrevuData(updatedData);
+    } else {
+      setRealiseData(updatedData);
+    }
+  };
+
+  const calculateCouvData = (data) => {
+    return regions.map((region) => {
+      const count = data.reduce(
+        (sum, day) => sum + (day.zone1 === region ? 1 : 0) + (day.zone2 === region ? 1 : 0),
+        0
+      );
+      return { region, count };
+    });
+  };
+
+  const preparePayload = () => {
+    const couvPrevData = calculateCouvData(prevuData);
+    const couvRealData = calculateCouvData(realiseData);
+
+    const payload = couvPrevData.map((item, index) => ({
+      region: item.region,
+      couvPrev: item.count,
+      couvReal: couvRealData[index].count,
+    }));
+
+    return payload;
   };
 
   const handleSubmit = async () => {
+    const data = preparePayload();
+
     try {
-      const response = await axios.post('http://localhost:5000/api/zone3/save', { data: tableData });
-      alert(`Session saved successfully! ID: ${response.data.sessionId}`);
+      const response = await axios.post('http://localhost:5000/api/zone3/save', { data });
+      alert(`Data saved successfully! Session ID: ${response.data.sessionId}`);
     } catch (error) {
       console.error(error);
       alert('Error saving data. Please try again.');
     }
   };
 
-  const totalCouvPrev = tableData.reduce((sum, row) => sum + row.couvPrev, 0);
-  const totalCouvReal = tableData.reduce((sum, row) => sum + row.couvReal, 0);
-
   return (
     <div>
       <Navbar />
       <div className="table-container">
-        <h2>Réalisation Couverture Zone</h2>
+        <h2>Couv Prévu</h2>
         <table className="table-input">
           <thead>
             <tr>
-              <th>Zone</th>
-              <th>Couv Prévu</th>
-              <th>% Couv Prévu</th>
-              <th>Couv Réalisée</th>
-              <th>% Couv Réalisée</th>
+              {days.map((day) => (
+                <th key={day}>{day}</th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {tableData.map((row, index) => (
-              <tr key={index}>
-                <td>{row.region}</td>
-                <td>
-                  <input
-                    type="number"
-                    value={row.couvPrev}
-                    onChange={(e) => handleChange(index, 'couvPrev', e.target.value)}
-                    placeholder="Enter Couv Prévu"
-                  />
+            <tr>
+              {days.map((_, index) => (
+                <td key={index}>
+                  <select
+                    value={prevuData[index].zone1}
+                    onChange={(e) =>
+                      handleChange("prevu", index, "zone1", e.target.value)
+                    }
+                  >
+                    <option value="">Select Zone 1</option>
+                    {regions.map((region) => (
+                      <option key={region} value={region}>
+                        {region}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={prevuData[index].zone2}
+                    onChange={(e) =>
+                      handleChange("prevu", index, "zone2", e.target.value)
+                    }
+                  >
+                    <option value="">Select Zone 2</option>
+                    {regions.map((region) => (
+                      <option key={region} value={region}>
+                        {region}
+                      </option>
+                    ))}
+                  </select>
                 </td>
-                <td>
-                  {totalCouvPrev > 0 ? ((row.couvPrev / totalCouvPrev) * 100).toFixed(2) : '0.00'}%
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    value={row.couvReal}
-                    onChange={(e) => handleChange(index, 'couvReal', e.target.value)}
-                    placeholder="Enter Couv Réalisée"
-                  />
-                </td>
-                <td>
-                  {totalCouvReal > 0 ? ((row.couvReal / totalCouvReal) * 100).toFixed(2) : '0.00'}%
-                </td>
-              </tr>
-            ))}
+              ))}
+            </tr>
           </tbody>
         </table>
-        <button onClick={handleSubmit} className="save-button">Save Data</button>
+
+        <h2>Couv Réalisé</h2>
+        <table className="table-input">
+          <thead>
+            <tr>
+              {days.map((day) => (
+                <th key={day}>{day}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {days.map((_, index) => (
+                <td key={index}>
+                  <select
+                    value={realiseData[index].zone1}
+                    onChange={(e) =>
+                      handleChange("realise", index, "zone1", e.target.value)
+                    }
+                  >
+                    <option value="">Select Zone 1</option>
+                    {regions.map((region) => (
+                      <option key={region} value={region}>
+                        {region}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={realiseData[index].zone2}
+                    onChange={(e) =>
+                      handleChange("realise", index, "zone2", e.target.value)
+                    }
+                  >
+                    <option value="">Select Zone 2</option>
+                    {regions.map((region) => (
+                      <option key={region} value={region}>
+                        {region}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+
+        <button onClick={handleSubmit} className="save-button">
+          Submit Data
+        </button>
       </div>
     </div>
   );
