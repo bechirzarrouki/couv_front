@@ -27,6 +27,14 @@ ChartJS.register(
 );
 
 const PieChart = ({ latestSession }) => {
+  // Debug log to verify that data is passed
+  console.log("PieChart received latestSession:", latestSession);
+
+  // If no data is available, show a fallback message
+  if (!latestSession || !latestSession.entries || latestSession.entries.length === 0) {
+    return <div style={{ padding: '2rem' }}>No pie chart data available.</div>;
+  }
+
   const predefinedColors = [
     'rgba(255, 99, 132, 0.6)',
     'rgba(54, 162, 235, 0.6)',
@@ -46,99 +54,157 @@ const PieChart = ({ latestSession }) => {
 
   const generateColors = (count) => predefinedColors.slice(0, count);
 
-  const pieChartDataReal = latestSession
-    ? {
-        labels: latestSession.entries.map((entry) => entry.zone),
-        datasets: [
-          {
-            label: 'Coverage Comparison Real',
-            data: latestSession.entries.map((entry) => entry.percentageCouvReal),
-            backgroundColor: generateColors(latestSession.entries.length),
-          },
-        ],
-      }
-    : null;
+  // Build chart data objects for each type
+  const pieChartDataReal = {
+    labels: latestSession.entries.map((entry) => entry.zone),
+    datasets: [
+      {
+        label: 'Coverage Comparison Real',
+        data: latestSession.entries.map((entry) => entry.percentageCouvReal),
+        backgroundColor: generateColors(latestSession.entries.length),
+      },
+    ],
+  };
 
-  const pieChartDataPrev = latestSession
-    ? {
-        labels: latestSession.entries.map((entry) => entry.zone),
-        datasets: [
-          {
-            label: 'Coverage Comparison Predicted',
-            data: latestSession.entries.map((entry) => entry.percentageCouvPrev),
-            backgroundColor: generateColors(latestSession.entries.length),
-          },
-        ],
-      }
-    : null;
+  const pieChartDataPrev = {
+    labels: latestSession.entries.map((entry) => entry.zone),
+    datasets: [
+      {
+        label: 'Coverage Comparison Predicted',
+        data: latestSession.entries.map((entry) => entry.percentageCouvPrev),
+        backgroundColor: generateColors(latestSession.entries.length),
+      },
+    ],
+  };
+
+  const pieChartDataSupp = {
+    labels: latestSession.entries.map((entry) => entry.zone),
+    datasets: [
+      {
+        label: 'Coverage Comparison Supplémentaire',
+        data: latestSession.entries.map((entry) => entry.percentageCouvSupp),
+        backgroundColor: generateColors(latestSession.entries.length),
+      },
+    ],
+  };
 
   return (
-    <div>
-      {/* Pie Charts */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', gap: '2%' }}>
+    <div style={{ padding: '2rem' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          gap: '2%',
+        }}
+      >
         {/* Pie Chart for Real Coverage */}
-        {pieChartDataReal && (
-          <div
+        <div
+          style={{
+            flex: '1 1 48%',
+            backgroundColor: '#fff',
+            padding: '1rem',
+            borderRadius: '8px',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+            marginBottom: '1rem',
+          }}
+        >
+          <h2
             style={{
-              width: '48%',
-              backgroundColor: '#fff',
-              padding: '1rem',
-              borderRadius: '8px',
-              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+              fontSize: '1.4rem',
+              textAlign: 'center',
+              marginBottom: '1rem',
+              color: '#333',
             }}
           >
-            <h2
-              style={{ fontSize: '1.4rem', textAlign: 'center', marginBottom: '1rem', color: '#333' }}
-            >
-              Coverage Distribution (Real)
-            </h2>
-            <div style={{ height: '300px' }}>
-              <Pie
-                data={pieChartDataReal}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  plugins: {
-                    legend: { position: 'top' },
-                    title: { display: true, text: 'Coverage Distribution (Real)' },
-                  },
-                }}
-              />
-            </div>
+            Coverage Distribution (Real)
+          </h2>
+          <div style={{ height: '300px' }}>
+            <Pie
+              data={pieChartDataReal}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: { position: 'top' },
+                  title: { display: true, text: 'Coverage Distribution (Real)' },
+                },
+              }}
+            />
           </div>
-        )}
+        </div>
 
         {/* Pie Chart for Predicted Coverage */}
-        {pieChartDataPrev && (
-          <div
+        <div
+          style={{
+            flex: '1 1 48%',
+            backgroundColor: '#fff',
+            padding: '1rem',
+            borderRadius: '8px',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+            marginBottom: '1rem',
+          }}
+        >
+          <h2
             style={{
-              width: '48%',
-              backgroundColor: '#fff',
-              padding: '1rem',
-              borderRadius: '8px',
-              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+              fontSize: '1.4rem',
+              textAlign: 'center',
+              marginBottom: '1rem',
+              color: '#333',
             }}
           >
-            <h2
-              style={{ fontSize: '1.4rem', textAlign: 'center', marginBottom: '1rem', color: '#333' }}
-            >
-              Coverage Distribution (Predicted)
-            </h2>
-            <div style={{ height: '300px' }}>
-              <Pie
-                data={pieChartDataPrev}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  plugins: {
-                    legend: { position: 'top' },
-                    title: { display: true, text: 'Coverage Distribution (Predicted)' },
-                  },
-                }}
-              />
-            </div>
+            Coverage Distribution (Predicted)
+          </h2>
+          <div style={{ height: '300px' }}>
+            <Pie
+              data={pieChartDataPrev}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: { position: 'top' },
+                  title: { display: true, text: 'Coverage Distribution (Predicted)' },
+                },
+              }}
+            />
           </div>
-        )}
+        </div>
+
+        {/* Pie Chart for Supplémentaire Coverage */}
+        <div
+          style={{
+            flex: '1 1 48%',
+            backgroundColor: '#fff',
+            padding: '1rem',
+            borderRadius: '8px',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+            marginBottom: '1rem',
+          }}
+        >
+          <h2
+            style={{
+              fontSize: '1.4rem',
+              textAlign: 'center',
+              marginBottom: '1rem',
+              color: '#333',
+            }}
+          >
+            Coverage Distribution (Supplémentaire)
+          </h2>
+          <div style={{ height: '300px' }}>
+            <Pie
+              data={pieChartDataSupp}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: { position: 'top' },
+                  title: { display: true, text: 'Coverage Distribution (Supplémentaire)' },
+                },
+              }}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

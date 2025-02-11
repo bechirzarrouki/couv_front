@@ -81,6 +81,7 @@ function FormPage() {
     const data = preparePayload();
     try {
       await axios.post('http://localhost:5000/api/zone1/save', data);
+      console.log(data);
       alert('Data saved successfully!');
     } catch (error) {
       console.error(error);
